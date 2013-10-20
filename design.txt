@@ -1,0 +1,97 @@
+====
+    Copyright (C) 2013, Moss Computing Inc.
+
+    This file is part of nomad.
+
+    nomad is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2, or (at your option)
+    any later version.
+
+    nomad is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with nomad; see the file COPYING.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301 USA.
+
+    Linking this library statically or dynamically with other modules is
+    making a combined work based on this library.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting executable under
+    terms of your choice, provided that you also meet, for each linked
+    independent module, the terms and conditions of the license of that
+    module.  An independent module is a module which is not derived from
+    or based on this library.  If you modify this library, you may extend
+    this exception to your version of the library, but you are not
+    obligated to do so.  If you do not wish to do so, delete this
+    exception statement from your version.
+====
+
+COMPONENTS
+
+    api - the contract between a migration-def and nomad
+
+    core
+		def - defines the xml format to store information about updates.
+
+		history - defines an xml format describing what updates have been 
+            applied to a given data set.
+
+		packager - constructs an update jar.
+
+		runner - executes updates from an update jar.
+
+    maven-plugin - the thing that lets you configure the packager to run as part
+        of the maven build.
+
+	prep-maven-plugin - an optional plugin that records a project's 
+        dependencies in META-INF/classpath.xml as part of the build.
+
+    test-migration-handler - used for automated testing.
+
+	test-migration-support - used for automated testing.
+
+    test-migration-case - used for more real-world automated testing.
+
+CONCERNS
+
+	The migration-defs.xml file references a specific version of each artifact.
+    It would probably make sense for the version of that artifact to be bumped
+    to the release version once it has been released. It might be possible to
+    somehow incorporate this into the release process? It might just be more
+    trouble than its worth.
+
+    We've talked about implementing some sort of workspace-awareness logic into
+    the runner such that it uses workspace/project/target/classes for its 
+    classpath where it make sense. This also might be more trouble than its 
+    worth.
+
+TERMS
+
+Migration Handler: the code/project which performs a single atomic change to 
+    data.
+
+Migration Def: the metdata concerning a single atomic change to data.
+
+Migration Path: a sequence of Migration Def's which define the changes to be 
+    applied to a particular set of data.
+
+Migration: an operation performed by a Migration Handler according to the 
+    appearance of a Migration Def in a Migration Path which is being applied to 
+    a data set.
+
+Migration History: a record of the Migrations which have been performed on a 
+    set of data.
+
+Migration Package: A component containing a migration-def along with all the 
+    resource information needed to execute a migration with it.
+
